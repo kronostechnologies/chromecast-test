@@ -19,12 +19,17 @@
   </head>
   <body>
     <div id="test"></div>
-    <iframe frameborder="0" src="https://jbreton.github.io/chromecast-test/iframe.html"></iframe>
     <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <script type="text/javascript">
       window.onload = function() {
         window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
         window.castReceiverManager.start();
+
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://jbreton.github.io/chromecast-test/iframe.html';
+        iframe.frameBorder = 0;
+        document.getElementById('test').appendChild(iframe);
+      }
     </script>
   </body>
 </html>

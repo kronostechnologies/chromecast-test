@@ -22,12 +22,14 @@
     <title>Cast Hello Text</title>
   </head>
   <body>
-    <div id="test">Test</div>
+    <div><span id="test">Test</span></div>
     <script type="text/javascript">
        window.onload = function() {
          window.setInterval(function() {
-            document.getElementById('test').text(Math.round(Math.random() * 10000));
-         }, 3000);
+            var rand = Math.round(Math.random() * 1000000);
+            console.log(rand);
+            document.getElementById('test').innerHTML = rand;
+         }, 1000);
        }
     </script>
   </body>
