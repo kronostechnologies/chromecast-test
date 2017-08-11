@@ -10,24 +10,21 @@
         width:1280PX;
       }
       iframe{
-        height:720px;
-        width:1280px;
+        height:100%;
+        width:100%;
+
       }
     </style>
     <title>Cast Hello Text</title>
   </head>
   <body>
     <div id="test"></div>
+    <iframe frameborder="0" src="https://jbreton.github.io/chromecast-test/iframe.html"></iframe>
     <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <script type="text/javascript">
       window.onload = function() {
         window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
         window.castReceiverManager.start();
-        
-        var iframe = document.createElement('iframe');
-        iframe.src = 'https://jbreton.github.io/chromecast-test/iframe.html';
-        document.getElementById('test').appendChild(iframe);
-      }
     </script>
   </body>
 </html>
