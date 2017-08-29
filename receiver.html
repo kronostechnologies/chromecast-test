@@ -19,7 +19,7 @@
     <title>Cast Hello Text</title>
   </head>
   <body>
-    <div id="test"></div>
+    <div id="dashboards"></div>
     <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
@@ -32,18 +32,6 @@
 			  console.log('Received Ready event: ' + JSON.stringify(event.data));
 			  window.castReceiverManager.setApplicationState('Application status is ready...');
 		  };
-		  // handler for 'senderconnected' event
-		  /*castReceiverManager.onSenderConnected = function(event) {
-			  console.log('Received Sender Connected event: ' + event.data);
-			  console.log(window.castReceiverManager.getSender(event.data).userAgent);
-		  };
-		  // handler for 'senderdisconnected' event
-		  castReceiverManager.onSenderDisconnected = function(event) {
-			  console.log('Received Sender Disconnected event: ' + event.data);
-			  if (window.castReceiverManager.getSenders().length == 0) {
-				  window.close();
-			  }
-		  };*/
 
 		  window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:io.github.jbreton.cast.sample');
 		  // handler for the CastMessageBus message event
@@ -56,7 +44,7 @@
 				  iframe = document.createElement('iframe');
 				  iframe.id = 'castedFrame';
 				  iframe.frameBorder = 0;
-				  document.getElementById('test').appendChild(iframe);
+				  document.getElementById('dashboards').appendChild(iframe);
 			  }
 
 			  var payload = JSON.parse(atob(event.data));
@@ -66,7 +54,7 @@
 			  var dashboards = payload.dashboards.split(',');
 
 			  setTimeout(function() {
-				  document.getElementById('test').removeChild(iframe);
+				  document.getElementById('dashboards').removeChild(iframe);
 
 				  $("#dashboards").empty();
 				  for (var i = 0; i < dashboards.length; i++) {
