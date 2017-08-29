@@ -64,19 +64,30 @@
 
 			  var dashboards = payload.dashboards.split(',');
 
-			  window.frame_count = dashboards.length;
-			  window.loop_index = 0;
-			  if(window.loop) {
-				  clearInterval(window.loop);
-			  }
-
 			  setTimeout(function() {
-                function goNext() {
-                  iframe.src = payload.hostname+'/'+dashboards[loop_index];
-                  window.loop_index = (((window.loop_index + 1) === window.frame_count) ? 0 : window.loop_index + 1);
-                }
-                goNext();
-                window.loop = setInterval(goNext, payload.duration);
+				  document.getElementById('test').removeChild(iframe);
+
+				  $("#dashboards").empty();
+				  for (var i = 0; i < dashboards.length; i++) {
+                      iframe = document.createElement('iframe');
+					  iframe.id = 'casted_frame_' + i;
+					  iframe.frameBorder = 0;
+					  iframe.src = payload.hostname + "/" + dashboards[i];
+					  iframe.style = "display: none;";
+					  $("#dashboards")[0].appendChild(iframe);
+				  }
+				  window.frame_count = dashboards.length;
+				  window.loop_index = dashboards.length - 1;
+				  if(window.loop) {
+					  clearInterval(window.loop);
+				  }
+				  function goNext() {
+					  $('#casted_frame_' + window.loop_index).hide();
+					  window.loop_index = (((window.loop_index + 1) === window.frame_count) ? 0 : window.loop_index + 1);
+					  $('#casted_frame_' + window.loop_index).show();
+				  }
+				  goNext();
+				  window.loop = setInterval(goNext, parseInt(payload.duration));
 
 			  }, 10000);
 
