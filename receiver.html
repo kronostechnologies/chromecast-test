@@ -1,90 +1,77 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style type="text/css">
-      body {
-        margin: 0;
-        overflow:hidden;
-      }
-      div{
-        height:720PX;
-        width:1280PX;
-      }
-      iframe{
-        height:100%;
-        width:100%;
+<head>
+  <style type="text/css">
+    body {
+      margin: 0;
+      overflow:hidden;
+    }
+    div{
+      height:720PX;
+      width:1280PX;
+    }
+    iframe{
+      height:100%;
+      width:100%;
+    }
+  </style>
+  <title>Cast Hello Text</title>
+</head>
+<body>
+<div id="dashboards"></div>
+<script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+	window.onload = function() {
+		window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+		console.log('Starting Receiver Manager');
 
-      }
-    </style>
-    <title>Cast Hello Text</title>
-  </head>
-  <body>
-    <div id="dashboards"></div>
-    <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript">
-      window.onload = function() {
-        window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+		castReceiverManager.onReady = function(event) {
+			console.log('Received Ready event: ' + JSON.stringify(event.data));
+			window.castReceiverManager.setApplicationState('Application status is ready...');
+		};
 
-		  console.log('Starting Receiver Manager');
-		  // handler for the 'ready' event
-		  castReceiverManager.onReady = function(event) {
-			  console.log('Received Ready event: ' + JSON.stringify(event.data));
-			  window.castReceiverManager.setApplicationState('Application status is ready...');
-		  };
+		window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:io.github.jbreton.cast.sample');
 
-		  window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:io.github.jbreton.cast.sample');
-		  // handler for the CastMessageBus message event
-		  window.messageBus.onMessage = function(event) {
-			  console.log('Message [' + event.senderId + ']: ' + event.data);
-			  // display the message from the sender
+		window.messageBus.onMessage = function(event) {
+			console.log('Message [' + event.senderId + ']: ' + event.data);
 
-			  var iframe = document.getElementById('castedFrame');
-			  if(!iframe) {
-				  iframe = document.createElement('iframe');
-				  iframe.id = 'castedFrame';
-				  iframe.frameBorder = 0;
-				  document.getElementById('dashboards').appendChild(iframe);
-			  }
+			$('#dashboards').empty();
 
-			  var payload = JSON.parse(atob(event.data));
+            var iframe = document.createElement('iframe');
+            iframe.frameBorder = 0;
+            document.getElementById('dashboards').appendChild(iframe);
 
-			  iframe.src = payload.hostname+'/'+payload.loginUrl+payload.token;
+			var payload = JSON.parse(atob(event.data));
+			iframe.src = payload.hostname+'/'+payload.loginUrl+payload.token;
 
-			  var dashboards = payload.dashboards.split(',');
+			var dashboards = payload.dashboards.split(',');
+			window.frame_count = dashboards.length;
+			window.loop_index = 0;
+			if(window.loop) {
+				clearInterval(window.loop);
+			}
+			setTimeout(function() {
+				function goNext() {
+					var newFrame = document.createElement('iframe');
+					newFrame.frameBorder = 0;
+					newFrame.src = payload.hostname+'/'+dashboards[loop_index];
+					newFrame.style = "display: none";
 
-			  setTimeout(function() {
-				  document.getElementById('dashboards').removeChild(iframe);
-
-				  $("#dashboards").empty();
-				  for (var i = 0; i < dashboards.length; i++) {
-                      iframe = document.createElement('iframe');
-					  iframe.id = 'casted_frame_' + i;
-					  iframe.frameBorder = 0;
-					  iframe.src = payload.hostname + "/" + dashboards[i];
-					  iframe.style = "display: none;";
-					  $("#dashboards")[0].appendChild(iframe);
-				  }
-				  window.frame_count = dashboards.length;
-				  window.loop_index = dashboards.length - 1;
-				  if(window.loop) {
-					  clearInterval(window.loop);
-				  }
-				  function goNext() {
-					  $('#casted_frame_' + window.loop_index).hide();
-					  window.loop_index = (((window.loop_index + 1) === window.frame_count) ? 0 : window.loop_index + 1);
-					  $('#casted_frame_' + window.loop_index).show();
-				  }
-				  goNext();
-				  window.loop = setInterval(goNext, parseInt(payload.duration));
-
-			  }, 10000);
-
-			  window.messageBus.send(event.senderId, event.data);
-		  }
-
-		  window.castReceiverManager.start();
-      }
-    </script>
-  </body>
+					window.loop_index = (((window.loop_index + 1) === window.frame_count) ? 0 : window.loop_index + 1);
+				    setTimeout(function() {
+				    	document.getElementById('dashboards').removeChild(iframe);
+				    	iframe = newFrame;
+				    	iframe.style = "display: block;";
+                    }, 5000)
+				}
+				goNext();
+				window.loop = setInterval(goNext, payload.duration);
+			}, 10000);
+			window.messageBus.send(event.senderId, event.data);
+		}
+		window.castReceiverManager.start();
+	}
+</script>
+</body>
 </html>
