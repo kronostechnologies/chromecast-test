@@ -13,20 +13,21 @@
     iframe{
       height:100%;
       width:100%;
+
     }
   </style>
   <title>Cast Hello Text</title>
 </head>
 <body>
-<div id="dashboards"></div>
+<div id="test"></div>
 <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 	window.onload = function() {
 		window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+
 		console.log('Starting Receiver Manager');
 
-		castReceiverManager.onReady = function(event) {
+        castReceiverManager.onReady = function(event) {
 			console.log('Received Ready event: ' + JSON.stringify(event.data));
 			window.castReceiverManager.setApplicationState('Application status is ready...');
 		};
@@ -36,41 +37,39 @@
 		window.messageBus.onMessage = function(event) {
 			console.log('Message [' + event.senderId + ']: ' + event.data);
 
-			$('#dashboards').empty();
-
-            var iframe = document.createElement('iframe');
-            iframe.frameBorder = 0;
-            document.getElementById('dashboards').appendChild(iframe);
+			var iframe = document.getElementById('castedFrame');
+			if(!iframe) {
+				iframe = document.createElement('iframe');
+				iframe.id = 'castedFrame';
+				iframe.frameBorder = 0;
+				document.getElementById('test').appendChild(iframe);
+			}
 
 			var payload = JSON.parse(atob(event.data));
+
 			iframe.src = payload.hostname+'/'+payload.loginUrl+payload.token;
 
 			var dashboards = payload.dashboards.split(',');
+
 			window.frame_count = dashboards.length;
 			window.loop_index = 0;
 			if(window.loop) {
 				clearInterval(window.loop);
 			}
+
 			setTimeout(function() {
 				function goNext() {
-					var newFrame = document.createElement('iframe');
-					newFrame.frameBorder = 0;
-					newFrame.src = payload.hostname+'/'+dashboards[loop_index];
-					newFrame.style = "display: none";
-					document.getElementById('dashboards').appendChild(newFrame);
-
+					iframe.src = payload.hostname+'/'+dashboards[loop_index];
 					window.loop_index = (((window.loop_index + 1) === window.frame_count) ? 0 : window.loop_index + 1);
-				    setTimeout(function() {
-						newFrame.style = "display: block;";
-				    	document.getElementById('dashboards').removeChild(iframe);
-				    	iframe = newFrame;
-                    }, 10000)
 				}
 				goNext();
 				window.loop = setInterval(goNext, payload.duration);
+
 			}, 10000);
+
 			window.messageBus.send(event.senderId, event.data);
 		}
+
 		window.castReceiverManager.start();
 	}
 </script>
