@@ -61,10 +61,10 @@
 
 					window.loop_index = (((window.loop_index + 1) === window.frame_count) ? 0 : window.loop_index + 1);
 				    setTimeout(function() {
+						newFrame.style = "display: block;";
 				    	document.getElementById('dashboards').removeChild(iframe);
 				    	iframe = newFrame;
-				    	iframe.style = "display: block;";
-                    }, 5000)
+                    }, 10000)
 				}
 				goNext();
 				window.loop = setInterval(goNext, payload.duration);
