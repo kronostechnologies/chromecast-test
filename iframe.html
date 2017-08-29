@@ -25,11 +25,12 @@
     <div><span id="test">Test</span></div>
     <script type="text/javascript">
        window.onload = function() {
-         window.setInterval(function() {
+         /*window.setInterval(function() {
             var rand = Math.round(Math.random() * 1000000);
             console.log(rand);
             document.getElementById('test').innerHTML = rand;
-         }, 1000);
+         }, 1000);*/
+         document.getElementById('test').innerHTML = location.href;
        }
     </script>
   </body>

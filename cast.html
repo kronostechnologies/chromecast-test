@@ -33,6 +33,7 @@ limitations under the License.
         font-family: "Arial", Arial, sans-serif;
         font-size: 40px;
         font-weight: bold;
+        margin-top: 5px;
       }
       .border {
         border: 2px solid #cccccc;
@@ -73,35 +74,35 @@ limitations under the License.
        * initialization success callback
        */
       function onInitSuccess() {
-        appendMessage('onInitSuccess');
+        console.log('onInitSuccess');
       }
 
       /**
        * initialization error callback
        */
       function onError(message) {
-        appendMessage('onError: ' + JSON.stringify(message));
+        console.log('onError: ' + JSON.stringify(message));
       }
 
       /**
        * generic success callback
        */
       function onSuccess(message) {
-        appendMessage('onSuccess: ' + message);
+        console.log('onSuccess: ' + message);
       }
 
       /**
        * callback on success for stopping app
        */
       function onStopAppSuccess() {
-        appendMessage('onStopAppSuccess');
+        console.log('onStopAppSuccess');
       }
 
       /**
        * session listener during initialization
        */
       function sessionListener(e) {
-        appendMessage('New session ID:' + e.sessionId);
+        console.log('New session ID:' + e.sessionId);
         session = e;
         session.addUpdateListener(sessionUpdateListener);
         session.addMessageListener(namespace, receiverMessage);
@@ -113,7 +114,7 @@ limitations under the License.
       function sessionUpdateListener(isAlive) {
         var message = isAlive ? 'Session Updated' : 'Session Removed';
         message += ': ' + session.sessionId;
-        appendMessage(message);
+        console.log(message);
         if (!isAlive) {
           session = null;
         }
@@ -125,7 +126,7 @@ limitations under the License.
        * @param {string} message A message string
        */
       function receiverMessage(namespace, message) {
-        appendMessage('receiverMessage: ' + namespace + ', ' + message);
+        console.log('receiverMessage: ' + namespace + ', ' + message);
       }
 
       /**
@@ -133,10 +134,10 @@ limitations under the License.
        */
       function receiverListener(e) {
         if(e === 'available') {
-          appendMessage('receiver found');
+          console.log('receiver found');
         }
         else {
-          appendMessage('receiver list empty');
+          console.log('receiver list empty');
         }
       }
 
@@ -167,29 +168,17 @@ limitations under the License.
       }
 
       /**
-       * append message to debug message window
-       * @param {string} message A message string
-       */
-      function appendMessage(message) {
-        console.log(message);
-        var dw = document.getElementById('debugmessage');
-        dw.innerHTML += '\n' + JSON.stringify(message);
-      }
-
-      /**
        * utility function to handle text typed in by user in the input field
        */
       function update() {
-        sendMessage(document.getElementById('input').value);
+      	var payload = {};
+      	payload.user = document.getElementById('username').value;
+      	payload.pass = document.getElementById('password').value;
+      	payload.redirect_to = document.getElementById('url').value;
+
+        sendMessage(payload.toJSON());
       }
 
-      /**
-       * handler for the transcribed text from the speech input
-       * @param {string} words A transcibed speech string
-       */
-      function transcribe(words) {
-        sendMessage(words);
-      }
     </script>
   </head>
   <body>
@@ -197,21 +186,18 @@ limitations under the License.
       <tr>
         <td>
           <form method="get" action="JavaScript:update();">
-            <input id="input" class="border" type="text" size="30"
-              onwebkitspeechchange="transcribe(this.value)" x-webkit-speech/>
+            <input id="username" class="border" type="text" size="30" placeholder="username"/>
+            <input id="password" class="border" type="text" size="30" placeholder="password"/>
+            <input id="url" class="border" type="text" size="30" placeholder="url"/>
+            <br/>
+            <input type="button" class="border" value="Cast"/>
           </form>
         </td>
       </tr>
     </table>
 
-    <!-- Debbugging output -->
-    <div style="margin:10px; visibility:hidden;">
-      <textarea rows="20" cols="70" id="debugmessage">
-      </textarea>
-    </div>
-
     <script type="text/javascript">
-      document.getElementById('input').focus();
+      document.getElementById('username').focus();
     </script>
   </body>
 </html>
