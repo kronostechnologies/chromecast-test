@@ -46,12 +46,12 @@
 
 			for (var i = 0; i < dashboards.length; i++) {
 				var url = dashboards[i];
-				var iframe = $('iframe');
+				var iframe = document.createElement('iframe');
 				iframe.id = 'casted_frame_' + i;
 				iframe.frameBorder = 0;
 				iframe.src = payload.hostname + "/" + payload.loginUrl + payload.token;
-				iframe.hide();
-				$("#dashboards").append(iframe);
+				iframe.style = "display: none;";
+				$("#dashboards")[0].appendChild(iframe);
 				var src = payload.hostname + "/" + url;
 				setTimeout(redirect.bind(null, iframe, src), 10000);
 			}
