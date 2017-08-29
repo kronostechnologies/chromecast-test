@@ -18,7 +18,7 @@
     <title>Cast Hello Text</title>
   </head>
   <body>
-    <div id="test"></div>
+    <div id="test">hello world</div>
     <script type="text/javascript" src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <script type="text/javascript">
       window.onload = function() {
@@ -41,7 +41,7 @@
 			  iframe.src = 'https://jbreton.github.io/chromecast-test/iframe.html?t='+event.data;*/
 			  document.getElementById('test').innerHTML = event.data;
 
-			  window.messageBus.sendMessage(event.data);
+			  window.messageBus.send(event.senderId, event.data);
 		  }
 
 		  window.castReceiverManager.start();
