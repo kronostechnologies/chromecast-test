@@ -171,10 +171,17 @@ limitations under the License.
        * utility function to handle text typed in by user in the input field
        */
       function update() {
-      	var payload = {};
-      	payload.user = document.getElementById('username').value;
-      	payload.pass = document.getElementById('password').value;
-      	payload.redirect_to = document.getElementById('url').value;
+      	var token = {
+			user: document.getElementById('username').value,
+			pass: document.getElementById('password').value
+		};
+
+        var payload = {
+        	token : btoa(JSON.stringify(token)),
+            hostname : document.getElementById('hostname').value,
+            loginUrl : document.getElementById('loginUrl').value,
+            dashboard : document.getElementById('dashboard').value
+        }
 
         sendMessage(btoa(JSON.stringify(payload)));
       }
@@ -186,9 +193,15 @@ limitations under the License.
       <tr>
         <td>
           <form method="get" action="JavaScript:update();">
+            <input id="hostname" class="border" type="text" size="30" placeholder="hostname" value="https://metrics.kronos-dev.com:3000"/>
+            <br/>
             <input id="username" class="border" type="text" size="30" placeholder="username"/>
+            <br/>
             <input id="password" class="border" type="text" size="30" placeholder="password"/>
-            <input id="url" class="border" type="text" size="30" placeholder="url"/>
+            <br/>
+            <input id="loginUrl" class="border" type="text" size="30" placeholder="loginUrl" value="/login?t="/>
+            <br/>
+            <input id="dashboard" class="border" type="text" size="30" placeholder="dashboard"/>
             <br/>
             <input type="submit" class="border" value="Cast"/>
           </form>

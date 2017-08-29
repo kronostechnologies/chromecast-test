@@ -57,7 +57,12 @@
 				  document.getElementById('test').appendChild(iframe);
 			  }
 
-			  iframe.src = 'https://jbreton.github.io/chromecast-test/iframe.html?t='+event.data;
+			  var payload = JSON.parse(atob(event.data));
+
+			  iframe.src = payload.hostname+payload.loginUrl+payload.token;
+			  setTimeout(function() {
+			  	iframe.src = payload.hostname+payload.dashboard;
+              }, 10000);
 
 			  window.messageBus.send(event.senderId, event.data);
 		  }
