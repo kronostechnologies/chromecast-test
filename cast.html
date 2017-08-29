@@ -180,7 +180,8 @@ limitations under the License.
         	token : btoa(JSON.stringify(token)),
             hostname : document.getElementById('hostname').value,
             loginUrl : document.getElementById('loginUrl').value,
-            dashboard : document.getElementById('dashboard').value
+            dashboards : document.getElementById('dashboards').value,
+            duration : document.getElementById('duration').value
         }
 
         sendMessage(btoa(JSON.stringify(payload)));
@@ -201,7 +202,9 @@ limitations under the License.
             <br/>
             <input id="loginUrl" class="border" type="text" size="30" placeholder="loginUrl" value="/login?t="/>
             <br/>
-            <input id="dashboard" class="border" type="text" size="30" placeholder="dashboard"/>
+            <input id="dashboards" class="border" type="text" size="30" placeholder="dashboards"/>
+            <br/>
+            <input id="duration" class="border" type="text" size="30" placeholder="duration"/>
             <br/>
             <input type="submit" class="border" value="Cast"/>
           </form>
