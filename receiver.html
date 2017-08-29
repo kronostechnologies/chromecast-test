@@ -54,7 +54,7 @@
 			  console.log('Message [' + event.senderId + ']: ' + event.data);
 			  // display the message from the sender
 
-			  /*var iframe = document.getElementById('castedFrame');
+			  var iframe = document.getElementById('castedFrame');
 			  if(!iframe) {
 				  iframe = document.createElement('iframe');
 				  iframe.id = 'castedFrame';
@@ -62,8 +62,7 @@
 				  document.getElementById('test').appendChild(iframe);
 			  }
 
-			  iframe.src = 'https://jbreton.github.io/chromecast-test/iframe.html?t='+event.data;*/
-			  document.getElementById('test').innerHTML = event.data;
+			  iframe.src = 'https://jbreton.github.io/chromecast-test/iframe.html?t='+event.data;
 
 			  window.messageBus.send(event.senderId, event.data);
 		  }
