@@ -40,6 +40,8 @@
 
 			  iframe.src = 'https://jbreton.github.io/chromecast-test/iframe.html?t='+event.data;*/
 			  document.getElementById('test').innerHTML = event.data;
+
+			  window.messageBus.sendMessage(event.data);
 		  }
 
 		  window.castReceiverManager.start();
