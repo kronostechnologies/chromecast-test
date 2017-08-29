@@ -65,7 +65,7 @@
 				$('#casted_frame_' + window.loop_index).hide();
 				window.loop_index = (((window.loop_index + 1) === window.frame_count) ? 0 : window.loop_index + 1);
 				$('#casted_frame_' + window.loop_index).show();
-			}, payload.duration);
+			}, parseInt(payload.duration));
 
 			window.messageBus.send(event.senderId, event.data);
 		}
