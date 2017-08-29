@@ -23,7 +23,6 @@
     <script type="text/javascript">
       window.onload = function() {
         window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
-        window.castReceiverManager.start();
 
 		  window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:io.github.jbreton.cast.sample');
 		  // handler for the CastMessageBus message event
@@ -41,6 +40,8 @@
 
 			  iframe.src = 'https://jbreton.github.io/chromecast-test/iframe.html?t='.event.data;
 		  }
+
+		  window.castReceiverManager.start();
       }
     </script>
   </body>
