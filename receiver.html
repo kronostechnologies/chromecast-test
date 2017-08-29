@@ -57,6 +57,7 @@
 					newFrame.frameBorder = 0;
 					newFrame.src = payload.hostname+'/'+dashboards[loop_index];
 					newFrame.style = "display: none";
+					document.getElementById('dashboards').appendChild(newFrame);
 
 					window.loop_index = (((window.loop_index + 1) === window.frame_count) ? 0 : window.loop_index + 1);
 				    setTimeout(function() {
