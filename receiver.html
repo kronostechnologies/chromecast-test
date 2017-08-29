@@ -53,11 +53,11 @@
 				iframe.style = "display: none;";
 				$("#dashboards")[0].appendChild(iframe);
 				var src = payload.hostname + "/" + url;
-				setTimeout(redirect.bind(null, iframe, src), 10000);
+				setTimeout(redirect.bind(null, iframe, src), 10000 * (i + 1));
 			}
 
 			window.frame_count = dashboards.length;
-			window.loop_index = 0;
+			window.loop_index = dashboards.length - 1;
 			if(window.loop) {
 				clearInterval(window.loop);
 			}
