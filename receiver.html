@@ -32,6 +32,9 @@
 		};
 		window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:io.github.jbreton.cast.sample');
 
+        function redirect(iframe, src) {
+        	iframe.src = src;
+        }
 
 		window.messageBus.onMessage = function(event) {
 			console.log('Message [' + event.senderId + ']: ' + event.data);
@@ -41,8 +44,6 @@
 
 			$("#dashboards").empty();
 
-			var iframes = [];
-
 			for (var i = 0; i < dashboards.length; i++) {
 				var url = dashboards[i];
 				var iframe = $('iframe');
@@ -50,11 +51,9 @@
 				iframe.frameBorder = 0;
 				iframe.src = payload.hostname + "/" + payload.loginUrl + payload.token;
 				iframe.hide();
-				iframes[i] = iframe;
 				$("#dashboards").append(iframe);
-				setTimeout(function() {
-					iframes[i].src = payload.hostname + "/" + url;
-				}, 10000);
+				var src = payload.hostname + "/" + url;
+				setTimeout(redirect.bind(null, iframe, src), 10000);
 			}
 
 			window.frame_count = dashboards.length;
