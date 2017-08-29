@@ -31,7 +31,7 @@
 			  window.castReceiverManager.setApplicationState('Application status is ready...');
 		  };
 		  // handler for 'senderconnected' event
-		  castReceiverManager.onSenderConnected = function(event) {
+		  /*castReceiverManager.onSenderConnected = function(event) {
 			  console.log('Received Sender Connected event: ' + event.data);
 			  console.log(window.castReceiverManager.getSender(event.data).userAgent);
 		  };
@@ -41,12 +41,7 @@
 			  if (window.castReceiverManager.getSenders().length == 0) {
 				  window.close();
 			  }
-		  };
-		  // handler for 'systemvolumechanged' event
-		  castReceiverManager.onSystemVolumeChanged = function(event) {
-			  console.log('Received System Volume Changed event: ' + event.data['level'] + ' ' +
-				  event.data['muted']);
-		  };
+		  };*/
 
 		  window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:io.github.jbreton.cast.sample');
 		  // handler for the CastMessageBus message event
