@@ -176,7 +176,7 @@ limitations under the License.
       	payload.pass = document.getElementById('password').value;
       	payload.redirect_to = document.getElementById('url').value;
 
-        sendMessage(payload.toJSON());
+        sendMessage(JSON.stringify(payload));
       }
 
     </script>
