@@ -104,36 +104,41 @@
 
         function encodePayload(payload) {
 			if(payload) {
-				var payload = btoa(JSON.stringify(payload));
-				console.log(payload);
+				var encodedPayload = btoa(JSON.stringify(payload));
+				console.log('Go to : ' + location.origin + location.pathname + '?payload=' + encodedPayload);
 
 				var input = document.createElement('input');
 				input.style.display = 'none';
-				input.value = payload;
+				input.value = location.origin + location.pathname + '?payload=' + encodedPayload;
 				input = document.getElementById('body').appendChild(input);
 
 				input.style.display = 'block';
 				input.select();
 				document.execCommand('Copy');
-				console.log('Payload copied to clipboard');
+				console.log('Url copied to clipboard');
 				input.parentElement.removeChild(input);
 			}
 			else {
 				console.log('Please give the payload to encode, see exemple below :');
-				console.log({
-                    height: '1080px',
-                    width: '1920px',
-                    bootstrapUrl: 'asdf.com',
-                    playlist: [
-                        {
-                        	url: 'exemple.com/will/stay/here/for/5minutes',
-                            duration: 300000
-                        },
-                        {
-                        	url: 'github.com/then/will/stay/here/forever'
-                        }
-                    ]
-                })
+				var testPayload = {
+					height: '1080px',
+					width: '1920px',
+					bootstrapUrl: 'asdf.com',
+					playlist: [
+						{
+							url: 'exemple.com/will/stay/here/for/5minutes',
+							duration: 300000
+						},
+						{
+							url: 'github.com/then/will/stay/here/forever'
+						}
+					]
+				};
+				console.log(testPayload);
+				var encodedTest = btoa(JSON.stringify(testPayload));
+				console.log('Will become : ' + encodedTest);
+				console.log('Payload will be automatically copied to the clipboard, then go to ' + location.origin + location.pathname + '?payload=' + encodedTest);
+
             }
         }
     </script>
