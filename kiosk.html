@@ -92,7 +92,12 @@
 
 				if(payload.bootstrapUrl) {
                     iframe.onload = function() {
-                    	startPlaylist();
+                    	if(payload.bootstrapDuration) {
+                    	    setTimeout(startPlaylist, payload.bootstrapDuration);
+                        }
+                        else {
+							startPlaylist();
+						}
                     }
                     iframe.src = payload.bootstrapUrl;
                 }
