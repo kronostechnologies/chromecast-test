@@ -111,3 +111,10 @@ function encodePayload(payload) {
 
     }
 }
+
+function decodePayload(payload) {
+    if (!payload) {
+        payload = parseQuery();
+    }
+    return JSON.parse(atob(payload));
+}
