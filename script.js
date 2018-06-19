@@ -5,16 +5,9 @@ var playlist = new Array();
 var currentPage = 0;
 
 function parseQuery() {
-    var str = window.location.search;
-    var params = {};
+    usp = new URLSearchParams(window.location.search);
 
-    str.replace(
-        new RegExp("([^?=&]+)(=([^&]*))?", "g"),
-        function($0, $1, $2, $3) {
-            params[$1] = $3;
-        }
-    );
-    return params;
+    return usp.get('payload');
 };
 
 function goToNextPage() {
@@ -43,8 +36,8 @@ window.onload = function() {
     var div = document.getElementById('iframediv');
     var params = parseQuery();
 
-    if (params.payload) {
-        var payload = JSON.parse(atob(params.payload));
+    if (params) {
+        var payload = JSON.parse(atob(params));
 
         if (payload.height) {
             div.style.height = payload.height;
