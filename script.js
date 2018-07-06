@@ -1,4 +1,3 @@
-Raven.config('https://9e33988e67424256bc0814c994c72306@sentry.io/1228849').install();
 
 var iframe = document.getElementById('iframe');
 var playlist = new Array();
@@ -33,6 +32,14 @@ function startPlaylist() {
 }
 
 window.onload = function() {
+    Raven.context(function () {
+        onLoad();
+    });
+}
+
+function onLoad() {
+    Raven.config('https://9e33988e67424256bc0814c994c72306@sentry.io/1228849').install();
+
     var div = document.getElementById('iframediv');
     var params = parseQuery();
 
