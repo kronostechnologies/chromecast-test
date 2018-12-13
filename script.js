@@ -15,7 +15,8 @@ function goToNextPage() {
         currentPage = 0;
     }
 
-
+    iframe.src = "about:blank";
+    iframe.contentWindow.close();
     iframe.src = playlist[currentPage].url;
 
     if (playlist[currentPage].duration) {
@@ -24,7 +25,7 @@ function goToNextPage() {
 }
 
 function startPlaylist() {
-    currentPage = playlist.length;
+    clearTimeout(startPlaylist);
     iframe.onload = function() {
         iframe.style.display = 'block';
     };
@@ -32,14 +33,10 @@ function startPlaylist() {
 }
 
 window.onload = function() {
-    Raven.context(function () {
-        onLoad();
-    });
+    onLoad();
 }
 
 function onLoad() {
-    Raven.config('https://9e33988e67424256bc0814c994c72306@sentry.io/1228849').install();
-
     var div = document.getElementById('iframediv');
     var params = parseQuery();
 
