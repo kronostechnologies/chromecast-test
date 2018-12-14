@@ -70,11 +70,11 @@ function onLoad() {
                     page.iframeInstance = document.createElement('iframe');
                     page.iframeInstance.style.display = 'none';
 
-                    page.iframeInstance.onload = function () {
+                    setTimeout(function () {
                       page.iframeInstance.style.display = 'block';
                       page.iframeInstance.onload = null;
                       page.iframeInstance.src = page.url;
-                    };
+                    }, 5000);
 
                     if (payload.bootstrapUrl) {
                       page.iframeInstance.src = payload.bootstrapUrl;
