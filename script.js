@@ -1,5 +1,5 @@
-
-var iframe = document.getElementById('iframe');
+var iframe = null;
+var iframeDiv = document.getElementById('iframediv');
 var playlist = new Array();
 var currentPage = 0;
 
@@ -9,15 +9,29 @@ function parseQuery() {
     return usp.get('payload');
 };
 
+function setActiveFrame(idx) {
+  for (var playlistIdx in playlist) {
+    var playlistIframe = playlist[playlistIdx].iframeInstance;
+
+    playlistIframe.classList.add('inactive');
+    playlistIframe.classList.remove('active');
+
+    if (idx == playlistIdx) {
+      playlistIframe.classList.remove('inactive');
+      playlistIframe.classList.add('active');
+
+      iframe = playlistIframe;
+    }
+  }
+}
+
 function goToNextPage() {
     currentPage++;
     if (currentPage >= playlist.length) {
         currentPage = 0;
     }
 
-    iframe.src = "about:blank";
-    iframe.contentWindow.close();
-    iframe.src = playlist[currentPage].url;
+    setActiveFrame(currentPage);
 
     if (playlist[currentPage].duration) {
         setTimeout(goToNextPage, playlist[currentPage].duration);
@@ -25,10 +39,6 @@ function goToNextPage() {
 }
 
 function startPlaylist() {
-    clearTimeout(startPlaylist);
-    iframe.onload = function() {
-        iframe.style.display = 'block';
-    };
     goToNextPage();
 }
 
@@ -37,44 +47,50 @@ window.onload = function() {
 }
 
 function onLoad() {
-    var div = document.getElementById('iframediv');
     var params = parseQuery();
 
     if (params) {
         var payload = JSON.parse(atob(params));
 
         if (payload.height) {
-            div.style.height = payload.height;
+          iframeDiv.style.height = payload.height;
         } else {
-            div.style.height = '1080px';
+          iframeDiv.style.height = '1080px';
         }
 
         if (payload.width) {
-            div.style.width = payload.width;
+          iframeDiv.style.width = payload.width;
         } else {
-            div.style.width = '1920px';
+          iframeDiv.style.width = '1920px';
         }
 
         if (Array.isArray(payload.playlist)) {
             payload.playlist.forEach(function(page) {
                 if (page.url) {
+                    page.iframeInstance = document.createElement('iframe');
+                    page.iframeInstance.style.display = 'none';
+
+                    page.iframeInstance.onload = function () {
+                      page.iframeInstance.style.display = 'block';
+                      page.iframeInstance.onload = null;
+                      page.iframeInstance.src = page.url;
+                    };
+
+                    if (payload.bootstrapUrl) {
+                      page.iframeInstance.src = payload.bootstrapUrl;
+                    } else {
+                      page.iframeInstance.src = "about:blank";
+                    }
+
+                    iframeDiv.appendChild(page.iframeInstance);
                     playlist.push(page);
                 }
             });
+
+            iframe = playlist[0].iframeInstance;
         }
 
-        if (payload.bootstrapUrl) {
-            iframe.onload = function() {
-                if (payload.bootstrapDuration) {
-                    setTimeout(startPlaylist, payload.bootstrapDuration);
-                } else {
-                    startPlaylist();
-                }
-            }
-            iframe.src = payload.bootstrapUrl;
-        } else {
-            startPlaylist();
-        }
+        startPlaylist();
     }
 }
 
@@ -112,7 +128,6 @@ function encodePayload(payload) {
         var encodedTest = btoa(JSON.stringify(testPayload));
         console.log('Will become : ' + encodedTest);
         console.log('Payload will be automatically copied to the clipboard, then go to ' + location.origin + location.pathname + '?payload=' + encodedTest);
-
     }
 }
 
